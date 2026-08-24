@@ -1,6 +1,6 @@
 # How to Install Mastodon Digest
 
-Mastodon Digest is a Python script that generates a summary of your Mastodon feed and uploads it in XML format to folder on your web server that you or anyone with the path can subscribe to with an RSS reader. 
+Mastodon Digest is small self-hosted python tool that reads the last N hours of your Mastodon home timeline, asks an LLM to summarize it, and publishes the result as an Atom.xml feed on your own web server so you can read using your RSS reader instead of having to catch up on the live timeline.
 
 This software requires a computer to run the script and a remote web server to host the summary file. 
 
@@ -8,7 +8,7 @@ This software requires a computer to run the script and a remote web server to h
 `mastodon-digest.py`
 `build_feed.py`
 `run.sh`
-``.env` environment variables template that you customize.
+`sample_env` 
 
 The default LLM provider is `openai` with `gpt-4o-mini`. `--provider anthropic` uses `claude-haiku-4-5-20251001`, `--provider ollama` runs locally with no key.
 Each run logs provider, model, and input/output token counts to `run.log`.
@@ -40,17 +40,18 @@ To create the folder path using a hard-to-find folder name, run this command on 
     printf 'Header set X-Robots-Tag "noindex, nofollow"\n' > ~/webhost.com/_feeds/.htaccess
 
 Save this path to the appropriate variable in your .env.
+
 ## 4. SSH key
 * Since the script will run as you, generate an SSH using your own account:
 
-    ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_digest -N ""
-    chmod 700 ~/.ssh
-    chmod 600 ~/.ssh/id_ed25519_digest
-    chmod 644 ~/.ssh/id_ed25519_digest.pub
+	`ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_digest -N ""
+	chmod 700 ~/.ssh
+	chmod 600 ~/.ssh/id_ed25519_digest
+	chmod 644 ~/.ssh/id_ed25519_digest.pub`
 
 * Install it on the web host and test:
 
-    ssh-copy-id -i ~/.ssh/id_ed25519_digest.pub USER@WEBHOST
+	`ssh-copy-id -i ~/.ssh/id_ed25519_digest.pub USER@WEBHOST`
 
 * If `ssh-copy-id` is missing, run these commands:
 	`cat ~/.ssh/id_ed25519_digest.pub | ssh USER@WEBHOST "cat >> ~/.ssh/authorized_keys"`
@@ -60,6 +61,7 @@ Save this path to the appropriate variable in your .env.
 
 * You can optionally harden the connection by editing !/.ssh/authorized_keys on the web host and inserting 'restrict,no-pty' to ensure that a compromised sending machine can't access the server:
 	`restrict,no-pty ssh-ed25519 ABC_keymaterial_123 yourname@yourhost.com`
+
 ## 5. Install
 
 Install the software on your local computer. Create the folder that the software will be run from:
@@ -72,40 +74,42 @@ Install library packages needed by the Python script:
 `venv/bin/pip install requests markdown nh3`
 
 * Copy `mastodon-digest.py`, `build_feed.py`, and `run.sh` into that directory.
-* Create your .env file and customize it for your environment. 
+* Copy sample_env to .env in the scripts installation folder and customize it for your environment. 
 
-    MASTODON_INSTANCE=https://hachyderm.io
+`    MASTODON_INSTANCE=https://hachyderm.io
     MASTODON_TOKEN=paste_token_here
     OPENAI_API_KEY=paste_key_here
     DIGEST_HOURS=12
     OUT_DIR="$HOMEDIR/digests"
     SSH_KEY="$HOMEDIR/.ssh/id_ed25519_digest"
     FEED_URL=https://example.com/_feeds/*summary_folder*/atom.xml
-    DEST=USER@WEBHOST:example.com/_feeds/*summary_folder*/
+    DEST=USER@WEBHOST:example.com/_feeds/*summary_folder*/`
     
 * Optionally add must-read high priority accounts and interests:
-    MASTODON_PRIORITY=someone@hachyderm.io,someoneelse@fosstodon.org
-    DIGEST_INTERESTS="self-hosting, distributed systems, photography"
+`    MASTODON_PRIORITY=someone@hachyderm.io,someoneelse@fosstodon.org
+    DIGEST_INTERESTS="self-hosting, distributed systems, photography"`
 
 * Set file permissions:
-    chmod 600 .env
-    chmod +x run.sh
+`    chmod 600 .env
+    chmod +x run.sh`
 
 You can customize the program's behavior by setting environment variables in .env; otherwise, the files `mastodon-digest.py` and `run.sh` do not need customization or editing.
+
 ## 6. Test the Install
 
     ~/mastodon-digest/run.sh && tail -5 ~/mastodon-digest/run.log
 
 The log will show post count, provider, model, token counts, and other information. Open the URL to the summary file in a browser to confirm that it renders correctly.
-## 7. Schedule with Cron
 
-If your system has crontab, you can set it to run twice daily with `crontab -e` per this example:
+## 7. Schedule
+
+If your system has cron, you can set it to run twice daily with `crontab -e` per this example:
 
     0 7,19 * * * $HOME/mastodon-digest/run.sh
 
-Note that cron doesn't give notifications on run failures, so check run.log if you don't see any updates for a while.
-
 Other schedulers you can use include systemd timers or anacron on Linux, launchd on MacOS, or Task Scheduler on Synology or QNAP.
+
+Note that some schedulers including cron don't give notifications on run failures, so check run.log if you don't see any updates for a while.
 
 ## 8. Subscribe With Your RSS Reader
 
