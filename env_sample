@@ -1,0 +1,25 @@
+# Mastodon settings
+MASTODON_INSTANCE="https://your_mastodon_server.com"
+MASTODON_TOKEN="your_mastodon_token"
+
+# LLM settings
+PROVIDER=openai 
+OPENAI_API_KEY=your_openai_key
+# PROVIDER=anthropic
+# ANTHROPIC_API_KEY=your_anthropic_key
+# PROVIDER=ollama
+# OLLAMA_URL=
+# OLLAMA_MODEL=
+
+# SSH settings
+SSH_KEY="$HOMEDIR/.ssh/your_server_key_file"
+
+# Summary file settings
+FEED_LIMIT=20
+DEST="login@yourserver.com:yourserver.com/_feeds/yourfolder/"
+DIGEST_HOURS=12
+DIGEST_INTERESTS="graffiti,cats,canals,photography,fintech,apple"
+FEED_URL="https://yourserver.com/_feeds/RANDOM/atom.xml"
+MASTODON_PRIORITY="goosehenry@goosehenry.com"
+OUT_DIR="${HOMEDIR}/digests"
+TZ="America/New_York"

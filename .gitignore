@@ -1,0 +1,22 @@
+# secrets — never commit real config
+.env
+my_env
+*.env
+.env.local
+
+# allow the shipped template
+!env_sample
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+venv/
+
+# editor / OS cruft
+*.swp
+.*.swp
+.DS_Store
+
+# runtime output
+run.log
