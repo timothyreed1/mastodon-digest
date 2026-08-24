@@ -76,13 +76,13 @@ Most environment settings may be set or overridden with the following command-li
 `--flag=value` format. An unrecognized flag or missing mandatory environment 
 variable makes `run.sh` exit with an error.
 
-- `-h`, `--help` — print usage and exit.
-- `--hours N` — hours of timeline to summarize. Forwarded to `mastodon-digest.py`; overrides `DIGEST_HOURS`.
-- `--provider anthropic|ollama|openai` — forwarded to `mastodon-digest.py`; overrides `PROVIDER`.
-- `--model MODEL` — override the provider's default model. Forwarded to `mastodon-digest.py`.
+- `-h`, `--help` - print usage and exit.
+- `--hours N` - hours of timeline to summarize. Forwarded to `mastodon-digest.py`; overrides `DIGEST_HOURS`.
+- `--provider anthropic|ollama|openai` - forwarded to `mastodon-digest.py`; overrides `PROVIDER`.
+- `--model MODEL` - override the provider's default model. Forwarded to `mastodon-digest.py`.
 - `--feed-url https://your_webserver.com/path/to/atom.xml` — forwarded to `build_feed.py`; overrides `FEED_URL`.
-- `--out-dir /path/to/local/folder` — local folder for the digest and feed files. Forwarded to *both* scripts and overrides `OUT_DIR` for the run, including the file `run.sh` uploads afterward.
-- `--env_file /path/to/.env` — which `.env` file to load. Must be a fully qualified path. Handled by `run.sh` itself and not forwarded; defaults to the `.env` next to `run.sh`.
+- `--out-dir /path/to/local/folder` - local folder for the digest and feed files. Forwarded to *both* scripts and overrides `OUT_DIR` for the run, including the file `run.sh` uploads afterward.
+- `--env_file /path/to/.env` - which `.env` file to load. Must be a fully qualified path. Handled by `run.sh` itself and not forwarded; defaults to the `.env` next to `run.sh`.
 
 ## Scheduling
 
