@@ -8,10 +8,10 @@ Variables to set in the .env file:
   MASTODON_TOKEN     token from <instance>/settings/applications
   OPENAI_API_KEY     when --provider openai (default)
   ANTHROPIC_API_KEY  when --provider anthropic
-  MASTODON_PRIORITY  optional, comma separated handles to always surface
+  MASTODON_PRIORITY  optional comma separated Mastodon handles to always surface
   DIGEST_HOURS       hours of timeline to summarize, --hours overrides
   OUT_DIR            output folder
-  TZ                 Set to your local timezone (e.g., America/New_York) or derives if not set
+  TZ                 Set to your local timezone (e.g., America/New_York). Derived if not set
 
 Providers:
   openai     https://api.openai.com
@@ -197,19 +197,18 @@ My interests: {INTERESTS}
 
 Produce, in markdown:
 
-1. A section per theme (3 to 6 themes) summarizing what happened. Group related
-   posts. Name the accounts driving each thread. Two to four sentences each.
-2. A "Must read" list of 5 to 10 posts, each as a single line: what it is, why
-   it matters to me, then the URL. Rank by relevance to my interests and by
-   whether the post contains substance (analysis, a link worth opening, an
-   announcement) rather than chatter.
-3. A "Skipped" line noting roughly what you filtered out.
-
-Rules: no preamble. Do not pad. Favourite and boost counts are unreliable
-(federation undercounts), so weight content over engagement. If a post is a
-reply without visible context, ignore it unless it stands alone. Never
-fabricate a URL; only use URLs present below. Do not use Obsidian wikilink
-syntax. Write every link as a markdown link, never a bare URL.
+1. A section per theme (3 to 6 themes). One or two sentences each briefly summarizing what was said by each and by which accounts.
+2. A "Must read" list of 5 to 10 posts, each as a single line: what the post is in 12 words or fewer, then the URL. Rank by relevance to my interests and by substance (analysis, a link worth opening, an announcement) over chatter.
+ 
+Rules: No preamble, closing remarks, or explanations of why something matters. 
+Do not pad. 
+Plain, factual, terse. Report what posts say; do not evaluate them. 
+No superlatives or praise words (e.g. "fascinating", "important", "notable", "great", "key", "significant", "urgent"). 
+No intensifiers ("very", "really", "highly"). 
+Weight content over engagement. 
+If a post is a reply without visible context, ignore it unless it stands alone. 
+Never fabricate a URL; only use URLs present below. 
+Do not use Obsidian wikilink syntax. Write every link as a markdown link, never a bare URL.
 
 TIMELINE:
 {corpus}
