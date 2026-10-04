@@ -78,18 +78,18 @@ Most environment settings may be set or overridden with the following command-li
 variable makes `run.sh` exit with an error.
 
 - `-h`, `--help` - print usage and exit.
-- `--hours N` - hours of timeline to summarize. Forwarded to `mastodon-digest.py`; overrides `DIGEST_HOURS`.
-- `--provider anthropic|ollama|openai` - forwarded to `mastodon-digest.py`; overrides `PROVIDER`.
-- `--output verbose|terse` - digest style. Forwarded to `mastodon-digest.py`; overrides `OUTPUT_RULES`.
-- `--model MODEL` - override the provider's default model. Forwarded to `mastodon-digest.py`.
-- `--feed-url https://your_webserver.com/path/to/atom.xml` — forwarded to `build_feed.py`; overrides `FEED_URL`.
-- `--output-dir /path/to/local/folder` - local folder for the digest and feed files. Forwarded to *both* scripts and overrides `OUT_DIR` for the run, including the file `run.sh` uploads afterward.
-- `--env_file /path/to/.env` - which `.env` file to load. Must be a fully qualified path. Handled by `run.sh` itself and not forwarded; defaults to the `.env` next to `run.sh`.
+- `--hours N` - hours of timeline to summarize. Overrides `DIGEST_HOURS`.
+- `--provider anthropic|ollama|openai` - overrides `PROVIDER`.
+- `--output verbose|terse` - digest style. Overrides `OUTPUT_RULES`.
+- `--model MODEL` - override the provider's default model.
+- `--feed-url https://your_webserver.com/path/to/atom.xml` - used by `build_feed.py`. Overrides `FEED_URL`.
+- `--output-dir /path/to/local/folder` - local folder for the digest and feed file. Used by *both* scripts and overrides `OUT_DIR`, including the file `run.sh` uploads afterward.
+- `--env_file /path/to/.env` - which `.env` file to load. Must be a fully qualified path. Consumed by `run.sh`; defaults to `.env` in the same folder as `run.sh`.
 
 ## Scheduling
 
-Run it on a timer with cron, systemd timers, launchd, or your NAS's Task
-Scheduler.
+Run it on a timer with cron, systemd timers, launchd, or your NAS's task
+scheduler.
 
 ## License
 
