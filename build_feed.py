@@ -76,11 +76,11 @@ def slug(s):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out-dir", default=os.environ.get("OUT_DIR", "/out"))
+    ap.add_argument("--output-dir", default=os.environ.get("OUT_DIR", "/out"))
     ap.add_argument("--feed-url", default=os.environ.get("FEED_URL", ""))
     args = ap.parse_args()
 
-    files = glob.glob(os.path.join(args.out_dir, "Mastodon Digest *.md"))
+    files = glob.glob(os.path.join(args.output_dir, "Mastodon Digest *.md"))
     if not files:
         return
 
@@ -111,8 +111,8 @@ def main():
         + "\n</feed>\n"
     )
 
-    dest = os.path.join(args.out_dir, "atom.xml")
-    fd, tmp = tempfile.mkstemp(dir=args.out_dir, suffix=".tmp")
+    dest = os.path.join(args.output_dir, "atom.xml")
+    fd, tmp = tempfile.mkstemp(dir=args.output_dir, suffix=".tmp")
     with os.fdopen(fd, "w") as f:
         f.write(feed)
     os.replace(tmp, dest)
