@@ -197,8 +197,8 @@ My interests: {INTERESTS}
 
 Produce, in markdown:
 
-1. A section per theme (3 to 6 themes). One or two sentences each briefly summarizing what was said by each and by which accounts.
-2. A "Must read" list of 5 to 10 posts, each as a single line: what the post is in 12 words or fewer, then the URL. Rank by relevance to my interests and by substance (analysis, a link worth opening, an announcement) over chatter.
+1. A section per theme (5 to 8 themes). One or two sentences each briefly summarizing what was said and by which accounts.
+2. A "Must read" list of 7 to 12 posts, each as a single line: what the post is in 12 words or fewer, then the URL. Rank by relevance to my interests and by substance (analysis, a link worth opening, an announcement) over chatter.
  
 Rules: No preamble, closing remarks, or explanations of why something matters. 
 Do not pad. 
