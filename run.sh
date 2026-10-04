@@ -41,9 +41,9 @@ while [ $# -gt 0 ]; do
             ENV_FILE=${1#--env_file=}; shift ;;
 
         # mastodon-digest.py only
-        --hours|--provider|--model)
+        --hours|--provider|--model|--output)
             need_value "$1" $#; forward digest "$1" "$2"; shift 2 ;;
-        --hours=*|--provider=*|--model=*)
+        --hours=*|--provider=*|--model=*|--output=*)
             forward digest "$1"; shift ;;
 
         # build_feed.py only
@@ -53,15 +53,15 @@ while [ $# -gt 0 ]; do
             forward feed "$1"; shift ;;
 
         # both, and it also moves what gets copied and pruned below
-        --out-dir)
+        --output-dir)
             need_value "$1" $#; OUT_DIR_ARG=$2; forward both "$1" "$2"; shift 2 ;;
-        --out-dir=*)
-            OUT_DIR_ARG=${1#--out-dir=}; forward both "$1"; shift ;;
+        --output-dir=*)
+            OUT_DIR_ARG=${1#--output-dir=}; forward both "$1"; shift ;;
 
         -h|--help)
-            echo "usage: $0 [--env_file /path/to/.env] [--out-dir DIR]"
+            echo "usage: $0 [--env_file /path/to/.env] [--output-dir DIR]"
             echo "          [--hours N] [--provider NAME] [--model NAME]"
-            echo "          [--feed-url URL]"
+            echo "          [--output verbose|terse] [--feed-url URL]"
             echo "flags other than --env_file are forwarded to the python scripts"
             exit 0 ;;
         *)
