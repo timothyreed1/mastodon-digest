@@ -68,6 +68,7 @@ The following variables must be set in ENV or on the command line for the script
 - Set `MASTODON_PRIORITY` to a comma-separated list of Mastodon accounts that should always be included in the summary.
 - Set `DIGEST_INTERESTS` to a comma-separated list of interests for the summarizer to prioritize.
 - Set `PROVIDER` to `openai`, `anthropic`, or `ollama` to change the default LLM provider without passing `--provider` on every run. Defaults to `openai`.
+- Set `OUTPUT_RULES` to `VERBOSE` or `TERSE` to choose the digest style. `VERBOSE` gives longer theme summaries, says why each must-read post matters, and lists what was skipped. `TERSE` gives short, factual lines with no evaluation. Defaults to `VERBOSE`.
 - Set `FEED_AUTHOR` to the name shown as the Atom feed's author. Defaults to "Mastodon Digest".
 - Set `TZ` to your local timezone (e.g. `America/New_York`) so digest timestamps use local time instead of the system default
 
@@ -79,9 +80,10 @@ variable makes `run.sh` exit with an error.
 - `-h`, `--help` - print usage and exit.
 - `--hours N` - hours of timeline to summarize. Forwarded to `mastodon-digest.py`; overrides `DIGEST_HOURS`.
 - `--provider anthropic|ollama|openai` - forwarded to `mastodon-digest.py`; overrides `PROVIDER`.
+- `--output verbose|terse` - digest style. Forwarded to `mastodon-digest.py`; overrides `OUTPUT_RULES`.
 - `--model MODEL` - override the provider's default model. Forwarded to `mastodon-digest.py`.
 - `--feed-url https://your_webserver.com/path/to/atom.xml` — forwarded to `build_feed.py`; overrides `FEED_URL`.
-- `--out-dir /path/to/local/folder` - local folder for the digest and feed files. Forwarded to *both* scripts and overrides `OUT_DIR` for the run, including the file `run.sh` uploads afterward.
+- `--output-dir /path/to/local/folder` - local folder for the digest and feed files. Forwarded to *both* scripts and overrides `OUT_DIR` for the run, including the file `run.sh` uploads afterward.
 - `--env_file /path/to/.env` - which `.env` file to load. Must be a fully qualified path. Handled by `run.sh` itself and not forwarded; defaults to the `.env` next to `run.sh`.
 
 ## Scheduling

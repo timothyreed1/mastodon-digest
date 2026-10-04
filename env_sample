@@ -18,6 +18,8 @@ SSH_KEY="$HOMEDIR/.ssh/your_server_key_file"
 FEED_LIMIT=20
 DEST="login@yourserver.com:yourserver.com/_feeds/yourfolder/"
 DIGEST_HOURS=12
+# OUTPUT_RULES is VERBOSE (default) or TERSE
+OUTPUT_RULES=VERBOSE
 DIGEST_INTERESTS="graffiti,cats,canals,photography,fintech,apple"
 FEED_URL="https://yourserver.com/_feeds/RANDOM/atom.xml"
 MASTODON_PRIORITY="goosehenry@goosehenry.com"

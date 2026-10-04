@@ -11,6 +11,7 @@ Variables to set in the .env file:
   MASTODON_PRIORITY  optional comma separated Mastodon handles to always surface
   DIGEST_HOURS       hours of timeline to summarize, --hours overrides
   OUT_DIR            output folder
+  OUTPUT_RULES       VERBOSE (default) or TERSE, --output overrides
   TZ                 Set to your local timezone (e.g., America/New_York). Derived if not set
 
 Providers:
@@ -189,26 +190,48 @@ def render_corpus(posts, priority: set) -> str:
     return "\n".join(lines)
 
 
-def summarize(corpus: str, hours: int, provider: str, api_key: str):
+# Instructions per --output mode. Both share the intro and the TIMELINE block
+# in summarize(); only what to produce and how strictly differs.
+OUTPUT_RULES = {
+    "verbose": """Produce, in markdown:
+
+1. A section per theme (5 to 8 themes) summarizing what happened. Group related
+   posts. Name the accounts driving each thread. Two to four sentences each.
+2. A "Must read" list of 7 to 12 posts, each as a single line: what it is, why
+   it matters to me, then the URL. Rank by relevance to my interests and by
+   whether the post contains substance (analysis, a link worth opening, an
+   announcement) rather than chatter.
+3. A "Skipped" line noting roughly what you filtered out.
+
+Rules: no preamble. Do not pad. Favourite and boost counts are unreliable
+(federation undercounts), so weight content over engagement. If a post is a
+reply without visible context, ignore it unless it stands alone. Never
+fabricate a URL; only use URLs present below. Do not use Obsidian wikilink
+syntax. Write every link as a markdown link, never a bare URL.""",
+    "terse": """Produce, in markdown:
+
+1. A section per theme (5 to 8 themes). One or two sentences each briefly summarizing what was said and by which accounts.
+2. A "Must read" list of 7 to 12 posts, each as a single line: what the post is in 12 words or fewer, then the URL. Rank by relevance to my interests and by substance (analysis, a link worth opening, an announcement) over chatter.
+
+Rules: No preamble, closing remarks, or explanations of why something matters.
+Do not pad.
+Plain, factual, terse. Report what posts say; do not evaluate them.
+No superlatives or praise words (e.g. "fascinating", "important", "notable", "great", "key", "significant", "urgent").
+No intensifiers ("very", "really", "highly").
+Weight content over engagement.
+If a post is a reply without visible context, ignore it unless it stands alone.
+Never fabricate a URL; only use URLs present below.
+Do not use Obsidian wikilink syntax. Write every link as a markdown link, never a bare URL.""",
+}
+
+
+def summarize(corpus: str, hours: int, provider: str, api_key: str, output: str):
     prompt = f"""Below is my Mastodon home timeline from the last {hours} hours,
 one post per block with an id in brackets.
 
 My interests: {INTERESTS}
 
-Produce, in markdown:
-
-1. A section per theme (5 to 8 themes). One or two sentences each briefly summarizing what was said and by which accounts.
-2. A "Must read" list of 7 to 12 posts, each as a single line: what the post is in 12 words or fewer, then the URL. Rank by relevance to my interests and by substance (analysis, a link worth opening, an announcement) over chatter.
- 
-Rules: No preamble, closing remarks, or explanations of why something matters. 
-Do not pad. 
-Plain, factual, terse. Report what posts say; do not evaluate them. 
-No superlatives or praise words (e.g. "fascinating", "important", "notable", "great", "key", "significant", "urgent"). 
-No intensifiers ("very", "really", "highly"). 
-Weight content over engagement. 
-If a post is a reply without visible context, ignore it unless it stands alone. 
-Never fabricate a URL; only use URLs present below. 
-Do not use Obsidian wikilink syntax. Write every link as a markdown link, never a bare URL.
+{OUTPUT_RULES[output]}
 
 TIMELINE:
 {corpus}
@@ -282,14 +305,23 @@ def atomic_write(path: str, content: str):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--hours", type=int, default=env_int("DIGEST_HOURS"))
-    ap.add_argument("--out-dir", default=os.environ.get("OUT_DIR", "/out"))
+    ap.add_argument("--output-dir", default=os.environ.get("OUT_DIR", "/out"))
     ap.add_argument(
         "--provider",
         default=os.environ.get("PROVIDER", "openai"),
         choices=sorted(PROVIDERS),
     )
     ap.add_argument("--model", help="override the provider default model")
+    ap.add_argument(
+        "--output",
+        type=str.lower,
+        default=(os.environ.get("OUTPUT_RULES") or "verbose").strip().lower(),
+        choices=sorted(OUTPUT_RULES),
+        help="digest style, OUTPUT_RULES overrides the verbose default",
+    )
     args = ap.parse_args()
+    if args.output not in OUTPUT_RULES:
+        sys.exit(f"OUTPUT_RULES must be VERBOSE or TERSE, got {args.output!r}")
 
     if args.model:
         PROVIDERS[args.provider]["model"] = args.model
@@ -316,10 +348,11 @@ def main():
     now = datetime.now().astimezone()
     stamp = now.strftime("%Y-%m-%d %H%M")
     title = f"Mastodon Digest {stamp}"
-    path = os.path.join(args.out_dir, f"{title}.md")
+    path = os.path.join(args.output_dir, f"{title}.md")
 
     body, usage = summarize(
-        render_corpus(posts, priority), args.hours, args.provider, api_key
+        render_corpus(posts, priority), args.hours, args.provider, api_key,
+        args.output,
     )
 
     doc = (
@@ -341,6 +374,7 @@ def main():
         "posts": len(posts),
         "provider": args.provider,
         "model": PROVIDERS[args.provider]["model"],
+        "output": args.output,
         **usage,
     }))
 
